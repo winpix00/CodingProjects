@@ -1,0 +1,22 @@
+
+growth_rate_10_years <- c(5, 8, 7, 6, 9)  # Replace with actual data for 10 years old
+growth_rate_15_years <- c(7, 9, 6, 8, 10)  # Replace with actual data for 15 years old
+
+# Function to calculate mean growth rate
+calculate_mean_growth_rate <- function(growth_rates) {
+  mean_rate <- mean(growth_rates)
+  return(mean_rate)
+}
+
+# Calculate mean growth rates for each group
+mean_growth_rate_10_years <- calculate_mean_growth_rate(growth_rate_10_years)
+mean_growth_rate_15_years <- calculate_mean_growth_rate(growth_rate_15_years)
+
+# Compare mean growth rates
+if (mean_growth_rate_10_years > mean_growth_rate_15_years) {
+  cat("The group of Loblolly pines that are ten years old has a higher mean growth rate.")
+} else if (mean_growth_rate_10_years < mean_growth_rate_15_years) {
+  cat("The group of Loblolly pines that are fifteen years old has a higher mean growth rate.")
+} else {
+  cat("The mean growth rates are equal for both groups.")
+}
