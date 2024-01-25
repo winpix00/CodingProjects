@@ -1,0 +1,35 @@
+In R, also python
+
+1. Create a function that performs the desired task or set of tasks. This is your module.
+
+custom_module <- function(arg1, arg2) {
+
+  # Code for your module
+  result <- arg1 + arg2
+  return(result)
+}
+
+
+#' Custom Module
+#'
+#' This module adds two numbers.
+#'
+#' @param arg1 First number
+#' @param arg2 Second number
+#' @return The sum of arg1 and arg2
+custom_module <- function(arg1, arg2) {
+  # Code for your module
+  result <- arg1 + arg2
+  return(result)
+}
+
+2. Save in a Script or Source File: Save your function in a script or source file with an appropriate name (e.g., custom_module.R).
+
+3. Load the Module: Module if saved in a separate file, can load it into R environment using the source function.
+
+source("path/to/custom_module.R")
+
+4. Use the Module
+
+    result <- custom_module(3, 5)
+    print(result)
