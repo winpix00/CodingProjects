@@ -1,0 +1,13 @@
+check_time_of_day <- function() {
+  current_hour <- as.numeric(format(Sys.time(), "%H"))
+  
+  if (current_hour >= 20 || current_hour < 7) {
+    return("It is dark outside.")
+  } else {
+    return("It is light outside.")
+  }
+}
+
+# Example usage:
+result <- check_time_of_day()
+print(result)
