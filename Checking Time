@@ -11,3 +11,29 @@ check_time_of_day <- function() {
 # Example usage:
 result <- check_time_of_day()
 print(result)
+
+
+
+# Function to extract hour from timestamp
+get_hour <- function(timestamp) {
+  timestamp_str <- as.character(timestamp)
+  hour_str <- substr(timestamp_str, 12, 13)
+  return(as.numeric(hour_str))
+}
+
+# Custom function to check time of day
+custom_check_time_of_day <- function() {
+  current_time <- Sys.time()
+  current_hour <- get_hour(current_time)
+  
+  if (current_hour >= 20 || current_hour < 7) {
+    return("It is dark outside.")
+  } else {
+    return("It is light outside.")
+  }
+}
+
+# Example usage:
+result <- custom_check_time_of_day()
+print(result)
+
