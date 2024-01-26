@@ -1,0 +1,30 @@
+import arcpy
+
+# Set the workspace (where the geodatabase will be created)
+workspace = r"C:\Path\To\Your"
+arcpy.env.workspace = workspace
+
+# Create a new geodatabase
+geodatabase_name = "NewGeodatabase.gdb"
+geodatabase_path = arcpy.CreateFileGDB_management(workspace, geodatabase_name)[0]
+
+# Set the workspace to the new geodatabase
+arcpy.env.workspace = geodatabase_path
+
+# Create a new feature class (point feature class in this example)
+feature_class_name = "NewFeatureClass"
+geometry_type = "POINT"
+spatial_reference = arcpy.SpatialReference(4326)  # WGS 1984
+
+arcpy.CreateFeatureclass_management(
+    geodatabase_path,
+    feature_class_name,
+    geometry_type,
+    spatial_reference=spatial_reference
+)
+
+# Insert a point into the feature class
+with arcpy.da.InsertCursor(feature_class_name, ["SHAPE@XY"]) as cursor:
+    cursor.insertRow(((-122.0, 34.0)))  # Example coordinates (longitude, latitude)
+
+print("GIS database management completed.")
