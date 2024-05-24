@@ -1,0 +1,46 @@
+library(dplyr)
+library(ggplot2)
+
+#Q1:# 
+#Filter the dataset
+january_data <- US_climate_states %>%
+  filter(V1 %in% c("Iowa", "Maine", "Oklahoma", "Washington") & V3 == 1) %>%
+  mutate(V5 = as.numeric(V5)) 
+
+# Generate the boxplot
+ggplot(january_data, aes(x = V1, y = V5, fill = V1)) +
+  geom_boxplot() +
+  labs(title = "January Temperature Distribution in Selected States",
+       x = "State",
+       y = "Temperature (°F)") +
+  theme_minimal()
+
+#Q2 
+# Filter the dataset to include only Oklahoma and August data
+august_ok_data <- US_climate_states %>%
+  filter(V1 == "Oklahoma" & V3 == 8) %>%
+  mutate(V5 = as.numeric(V5), V6 = as.numeric(V6), Anomaly = V5 - V6)
+
+# Generate the time series graph with the temperature anomaly
+ggplot(august_ok_data, aes(x = V2, y = Anomaly, group = 1)) +
+  geom_line(color = "blue") +
+  geom_smooth(method = "loess", color = "red") +
+  labs(title = "August Temperature Anomaly in Oklahoma (1895-Present)",
+       y = "Temperature Anomaly (°F)",
+       x = "Year") +
+  theme_minimal()
+
+#Q3
+# Filter the dataset
+wyoming_data <- US_climate_states %>%
+  filter(V1 == "Wyoming" & V2 >= 1980)
+
+# Generate the faceted time series graph
+ggplot(wyoming_data, aes(x = V2, y = V5, group = 1)) +
+  geom_line(color = "blue") +
+  geom_smooth(method = "loess", color = "red") +
+  facet_wrap(~ V4, scales = "free_y") +
+  labs(title = "Monthly Temperatures in Wyoming (1980-Present)",
+       y = "Temperature (°F)",
+       x = "Year") +
+  theme_minimal()
