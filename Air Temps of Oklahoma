@@ -1,0 +1,67 @@
+library(dplyr)
+library(tidyr)
+library(sf)
+library(ggplot2)
+library(readr)
+
+
+#Q1
+
+climate_data <- read_csv("county_climate_2016.csv")
+
+# Filter for Cleveland County (FIPS = 40027)
+cleveland_data <- climate_data %>% filter(AreaCode == 40027)
+
+# Create a 'Date' column
+cleveland_data <- cleveland_data %>%
+  mutate(Date = as.Date(paste(Year, Month, Day, sep = "-")))
+
+# Pivot the data into long format
+cleveland_long <- cleveland_data %>%
+  pivot_longer(cols = c(MinAirTemperature, MeanAirTemperature, MaxAirTemperature),
+               names_to = "TemperatureType",
+               values_to = "Temperature")
+
+# Adjust TemperatureType names
+cleveland_long$TemperatureType <- recode(cleveland_long$TemperatureType, 
+                                         MinAirTemperature = "Min Temperature",
+                                         MeanAirTemperature = "Mean Temperature",
+                                         MaxAirTemperature = "Max Temperature")
+
+# Generate the time series plot
+ggplot(cleveland_long, aes(x = Date, y = Temperature, color = TemperatureType)) +
+  geom_line() +
+  labs(title = "Daily Minimum, Mean, and Maximum Air Temperatures in Cleveland County, OK (2016)",
+       x = "Date",
+       y = "Temperature (°C)",
+       color = "Temperature Type") +
+  theme_minimal()
+
+#Q2
+
+# Filter for Oklahoma counties 
+ok_climate_data <- climate_data %>% filter(AreaCode >= 40000 & AreaCode < 41000)
+
+# Group and summarize the data 
+ok_monthly_precip <- ok_climate_data %>%
+  group_by(AreaCode, Month) %>%
+  summarize(TotalPrecipitation = sum(TotalPrecipitation, na.rm = TRUE))
+
+# Load the Oklahoma counties shapefile
+ok_counties <- st_read("okcounty.shp")
+
+# Ensure the FIPS code in the shapefile is compatibl
+ok_counties <- ok_counties %>% mutate(FIPS = as.numeric(FIPS))
+
+# Join the spatial data with the summarized climate data
+ok_map_data <- ok_counties %>%
+  left_join(ok_monthly_precip, by = c("FIPS" = "AreaCode"))
+
+# Plot using ggplot2
+ggplot(ok_map_data) +
+  geom_sf(aes(fill = TotalPrecipitation), color = NA) +
+  facet_wrap(~ Month, ncol = 3) +
+  scale_fill_viridis_c(name = "Total Precipitation (mm)") +
+  labs(title = "Monthly Total Precipitation by County in Oklahoma (2016)",
+       caption = "Source: county_climate_2016.csv and okcounty.shp") +
+  theme_minimal()
