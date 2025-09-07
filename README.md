@@ -1,5 +1,2 @@
-Coding Languages and Software:
-  Rstudio
-  SQL
-  Python
-  SQL
+Coding Languages and Software: RStudio, SQL, Python, Arcpro
+
