@@ -1,0 +1,31 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Example: load your data (CSV export from GIS for simplicity)
+# df = pd.read_csv("flood_landuse_data.csv")
+
+# Example dummy structure
+data = {
+    "group_dscr": ["Residential", "Commercial", "Industrial", "Residential", "Commercial", "Industrial"],
+    "flood_risk": ["High", "High", "Low", "Low", "AO", "AO"]
+}
+df = pd.DataFrame(data)
+
+# Count parcels by land type & flood risk
+counts = df.groupby(["flood_risk", "group_dscr"]).size().reset_index(name="count")
+
+# Compute proportions within each flood risk zone
+counts["proportion"] = counts.groupby("flood_risk")["count"].apply(lambda x: x / x.sum())
+
+print(counts)
+
+# Pivot for visualization
+pivot = counts.pivot(index="group_dscr", columns="flood_risk", values="proportion")
+
+# Stacked bar chart
+pivot.plot(kind="bar", stacked=True, figsize=(8,6))
+plt.ylabel("Proportion")
+plt.title("Proportional Distribution of Land Types by Flood Risk")
+plt.legend(title="Flood Risk")
+plt.tight_layout()
+plt.show()
